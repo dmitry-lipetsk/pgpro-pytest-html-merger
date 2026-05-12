@@ -82,7 +82,7 @@ class E2EWorkspace:
                 f"but failed to generate report at: {report_path}"
             )
 
-        return report_path
+        return str(report_path)
 
     def run_merger(self, args: list):
         env = os.environ.copy()
