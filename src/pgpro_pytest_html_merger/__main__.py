@@ -600,7 +600,7 @@ class PytestHTMLReportMerger:
     def process_report(self, report_path):
         self._report_count += 1
 
-        with open(report_path, "r") as f:
+        with open(report_path, "r", encoding="utf-8") as f:
             soup = bs4.BeautifulSoup(f, features="html.parser")
 
         assert isinstance(soup, bs4.BeautifulSoup)
