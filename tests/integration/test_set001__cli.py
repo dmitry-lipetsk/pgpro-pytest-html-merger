@@ -1,6 +1,10 @@
 import subprocess
 import os
 import typing
+import sys
+import re
+
+from src.pgpro_pytest_html_merger import __version__ as prog_version
 
 # //////////////////////////////////////////////////////////////////////////////
 
@@ -14,7 +18,7 @@ def run_cli(args: typing.List[str]) -> subprocess.CompletedProcess:
     env["PYTHONPATH"] = "src" + os.pathsep + env.get("PYTHONPATH", "")
 
     return subprocess.run(
-        ["python3", "-m", "pgpro_pytest_html_merger"] + args,
+        [sys.executable, "-m", "pgpro_pytest_html_merger"] + args,
         capture_output=True,
         text=True,
         env=env,
@@ -69,6 +73,7 @@ def test_cli_help():
     assert "merge multiple pytest-html reports" in output
     assert "--input-dir" in output
     assert "--out" in output
+    assert "--version" in output
     return
 
 
@@ -157,6 +162,19 @@ def test_cli_error_on_duplicate_files(tmp_path):
     assert result.returncode == 1
     assert "Duplicate input file detected" in result.stderr
     assert "Termination due to input errors" in result.stderr
+    return
+
+
+# ------------------------------------------------------------------------
+def test_cli_version():
+    """
+    Check that --version prints the version and exits with code 0.
+    """
+    result = run_cli(["--version"])
+
+    assert result.returncode == 0
+    # We check that the output contains the version of our utility.
+    assert re.search(re.escape(" " + prog_version) + "$", result.stdout) is not None
     return
 
 

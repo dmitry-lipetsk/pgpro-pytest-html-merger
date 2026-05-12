@@ -40,6 +40,7 @@ pgpro-pytest-html-merger -i ./unit-tests -i ./e2e-tests extra-report.html -o ful
 
 | Argument | Shorthand | Description | Default |
 | :--- | :--- | :--- | :--- |
+| `--version` | | Show program's version number and exit | None |
 | `--input-dir` | `-i` | Directory containing HTML reports (can be used multiple times) | None |
 | `--out` | `-o` | Name of the output HTML report | `merged.html` |
 | `--title` | `-t` | Title of the output HTML report | None |

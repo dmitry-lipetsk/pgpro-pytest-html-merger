@@ -14,6 +14,8 @@ import collections
 
 from packaging.version import Version
 
+from . import __version__ as current_version
+
 log = logging.getLogger(__name__)
 
 
@@ -21,6 +23,13 @@ def parse_arguments():
     command_parser = argparse.ArgumentParser(
         description="A professional tool to merge multiple pytest-html reports into a single one with consistent metadata.",  # noqa: E501
         epilog="Example: pgpro-pytest-html-merger -i ./reports -o summary.html --title 'Nightly Build'",  # noqa: E501
+    )
+
+    command_parser.add_argument(
+        "--version",
+        action="version",
+        version=f"%(prog)s {current_version}",
+        help="Show program's version number and exit",
     )
 
     command_parser.add_argument(
@@ -591,10 +600,10 @@ class PytestHTMLReportMerger:
     def process_report(self, report_path):
         self._report_count += 1
 
-        html_doc = ""
         with open(report_path, "r") as f:
-            html_doc = f.read()
-        soup = bs4.BeautifulSoup(html_doc, features="html.parser")
+            soup = bs4.BeautifulSoup(f, features="html.parser")
+
+        assert isinstance(soup, bs4.BeautifulSoup)
 
         html_version = __class__._extract_pytest_html_version(
             report_path,
