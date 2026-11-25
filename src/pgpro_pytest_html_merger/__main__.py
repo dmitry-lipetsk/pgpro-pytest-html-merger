@@ -668,7 +668,11 @@ class PytestHTMLReportMerger:
         self._summary_envs.add(prop_list)
         return
 
-    def write_report(self, report_path, report_title):
+    def write_report(
+        self,
+        report_path,
+        report_title,
+    ):
         assert self.base is not None
         if report_title is None:
             report_title = os.path.basename(report_path)
@@ -854,7 +858,11 @@ def main(arguments):
         report_merger.add_report(infile)
 
     # Finalize and write the aggregated report to disk
-    report_merger.write_report(arguments.out, arguments.title)
+    report_merger.write_report(
+        arguments.out,
+        arguments.title,
+    )
+
     log.info(
         f"Successfully merged {len(raw_files)} reports into {arguments.out}",
     )
