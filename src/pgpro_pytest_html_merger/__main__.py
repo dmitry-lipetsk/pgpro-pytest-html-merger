@@ -574,6 +574,15 @@ class PytestHTMLReportMerger:
                 "Report does not have section with pytest-html link.",
             )
 
+        assert link is not None
+
+        if link.parent is None:
+            raise RuntimeError(
+                "Report pytest-html link does not have a parent element.",
+            )
+
+        assert link.parent is not None
+
         parent_text = link.parent.get_text()
 
         # Looking for pattern 'v' and digits (v4.0.2)
@@ -637,6 +646,15 @@ class PytestHTMLReportMerger:
         # load json data from the current report
         report_data_container = soup.select("#data-container")[0]
         report_jsonblob = report_data_container.get("data-jsonblob")
+
+        if type(report_jsonblob) is not str:
+            raise RuntimeError(
+                "Report {0!r} does not contain a valid 'data-jsonblob' string attribute.".format(
+                    str(report_path),
+                )
+            )
+        assert type(report_jsonblob) is str
+
         report_data = json.loads(report_jsonblob)
 
         # Calculate summary
@@ -751,6 +769,7 @@ class PytestHTMLReportMerger:
         # load json data from the base report
         base_data_container = self.base.select("#data-container")[0]
         base_jsonblob = base_data_container.get("data-jsonblob")
+        assert type(base_jsonblob) is str
         base_data = json.loads(base_jsonblob)
 
         # reset the title in the footer's data-jsonblob
