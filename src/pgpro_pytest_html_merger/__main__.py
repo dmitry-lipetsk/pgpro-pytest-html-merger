@@ -597,7 +597,12 @@ class PytestHTMLReportMerger:
         )
         return
 
-    def process_report(self, report_path):
+    def add_report(
+        self,
+        report_path: str,
+    ) -> None:
+        assert type(report_path) is str
+
         self._report_count += 1
 
         with open(report_path, "r", encoding="utf-8") as f:
@@ -846,7 +851,7 @@ def main(arguments):
 
     for infile in raw_files:
         log.info(f"Processing report: {infile}")
-        report_merger.process_report(infile)
+        report_merger.add_report(infile)
 
     # Finalize and write the aggregated report to disk
     report_merger.write_report(arguments.out, arguments.title)
