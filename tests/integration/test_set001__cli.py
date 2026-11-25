@@ -36,7 +36,7 @@ def test_cli_no_args():
 
     # Check for usage info or argparse error
     assert "usage:" in result.stdout.lower() or "error" in result.stderr.lower()
-    assert result.returncode in [0, 2]
+    assert result.returncode == 1
     return
 
 
@@ -54,6 +54,7 @@ def test_cli_empty_input_dir(tmp_path):
     # Our custom log message should be there (check both stdout/stderr depending on your logger)
     output = result.stdout + result.stderr
     assert "No HTML reports found" in output
+    assert result.returncode == 1
     return
 
 

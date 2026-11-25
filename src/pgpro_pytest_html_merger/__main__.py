@@ -869,7 +869,7 @@ def main(arguments):
 
     if not raw_files:
         log.error("No HTML reports found to process.")
-        return
+        sys.exit(1)
 
     # 4. Sorting
     raw_files.sort()
