@@ -8,6 +8,20 @@ from src.pgpro_pytest_html_merger import __main__ as prog
 # //////////////////////////////////////////////////////////////////////////////
 
 
+def _make_id(
+    p1: int,
+    p2: typing.Optional[int] = None,
+) -> prog.PytestReportEnvPropID:
+    return prog.PytestReportEnvPropID(
+        p1,
+        p2,
+    )
+
+
+# //////////////////////////////////////////////////////////////////////////////
+# TestSet008__pytest_report_env_prop_list_build_dict
+
+
 class TestSet008__pytest_report_env_prop_list_build_dict:
     @dataclasses.dataclass
     class tagData008:
@@ -16,16 +30,13 @@ class TestSet008__pytest_report_env_prop_list_build_dict:
         expected_dict: typing.Dict[str, typing.Any]
 
     # Helper to build IDs and Props quickly for test data
-    def _id(p1: int, p2: typing.Optional[int] = None) -> prog.PytestReportEnvPropID:
-        return prog.PytestReportEnvPropID(p1, p2)
-
     sm_Data008Ok: typing.List[tagData008] = [
         # 1. Using your new simplified helper_add(name, id, value)
         tagData008(
             sign="unique_names",
             input_list=prog.PytestReportEnvPropList()
-            .helper_add("OS", _id(1), "Linux")
-            .helper_add("Arch", _id(1), "x86_64"),
+            .helper_add("OS", _make_id(1), "Linux")
+            .helper_add("Arch", _make_id(1), "x86_64"),
             expected_dict={"OS": "Linux", "Arch": "x86_64"},
         ),
         # 2. Duplicate names check with stable sorting
@@ -33,7 +44,9 @@ class TestSet008__pytest_report_env_prop_list_build_dict:
             sign="duplicate_names_sorting",
             input_list=prog.PytestReportEnvPropList()
             # Adding ID(2) before ID(1) to test sorting logic
-            .helper_add("Python", _id(2), "3.9").helper_add("Python", _id(1), "3.8"),
+            .helper_add("Python", _make_id(2), "3.9").helper_add(
+                "Python", _make_id(1), "3.8"
+            ),
             expected_dict={"Python {1}": "3.8", "Python {2}": "3.9"},
         ),
         # 3. Recursive nesting with the new simplified syntax
@@ -42,13 +55,13 @@ class TestSet008__pytest_report_env_prop_list_build_dict:
             input_list=prog.PytestReportEnvPropList()
             .helper_add(
                 "Libs",
-                _id(1),
-                prog.PytestReportEnvPropList().helper_add("pytest", _id(1), "7.0"),
+                _make_id(1),
+                prog.PytestReportEnvPropList().helper_add("pytest", _make_id(1), "7.0"),
             )
             .helper_add(
                 "Libs",
-                _id(2),
-                prog.PytestReportEnvPropList().helper_add("pytest", _id(1), "8.0"),
+                _make_id(2),
+                prog.PytestReportEnvPropList().helper_add("pytest", _make_id(1), "8.0"),
             ),
             expected_dict={
                 "Libs {1}": {"pytest": "7.0"},
