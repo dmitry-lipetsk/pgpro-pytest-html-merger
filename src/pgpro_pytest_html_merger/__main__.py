@@ -574,6 +574,15 @@ class PytestHTMLReportMerger:
                 "Report does not have section with pytest-html link.",
             )
 
+        assert link is not None
+
+        if link.parent is None:
+            raise RuntimeError(
+                "Report pytest-html link does not have a parent element.",
+            )
+
+        assert link.parent is not None
+
         parent_text = link.parent.get_text()
 
         # Looking for pattern 'v' and digits (v4.0.2)
