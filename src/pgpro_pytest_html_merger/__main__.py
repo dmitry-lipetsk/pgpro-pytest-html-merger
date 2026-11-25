@@ -746,6 +746,8 @@ class PytestHTMLReportMerger:
                 ele = self.base.select(f"[data-test-result='{key}']")[0]
                 del ele["disabled"]
 
+            continue
+
         # load json data from the base report
         base_data_container = self.base.select("#data-container")[0]
         base_jsonblob = base_data_container.get("data-jsonblob")
@@ -814,6 +816,7 @@ def main(arguments):
             pattern = os.path.join(abs_dir, "*.html")
             found = glob.glob(pattern)
             raw_files.extend(found)
+            continue
 
     # 2. Collect from positional files
     if arguments.html_files:
@@ -826,6 +829,7 @@ def main(arguments):
                 has_errors = True
                 continue
             raw_files.append(abs_file)
+            continue
 
     # --- THE DEDUPLICATION CHECK ---
     counts = collections.Counter(raw_files)
@@ -834,6 +838,7 @@ def main(arguments):
     if duplicates:
         for d in duplicates:
             log.error(f"Duplicate input file detected: '{d}'")
+            continue
         has_errors = True
 
     # 3. Final check
@@ -856,6 +861,7 @@ def main(arguments):
     for infile in raw_files:
         log.info(f"Processing report: {infile}")
         report_merger.add_report(infile)
+        continue
 
     # Finalize and write the aggregated report to disk
     report_merger.write_report(
