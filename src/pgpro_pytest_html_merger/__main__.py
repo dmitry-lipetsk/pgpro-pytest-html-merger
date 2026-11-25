@@ -601,7 +601,14 @@ class PytestHTMLReportMerger:
         self._report_count += 1
 
         with open(report_path, "r", encoding="utf-8") as f:
-            soup = bs4.BeautifulSoup(f, features="html.parser")
+            html_content = f.read()
+
+        assert type(html_content) is str
+
+        soup = bs4.BeautifulSoup(
+            html_content,
+            features="html.parser",
+        )
 
         assert isinstance(soup, bs4.BeautifulSoup)
 
