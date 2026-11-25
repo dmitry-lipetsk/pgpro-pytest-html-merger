@@ -13,7 +13,7 @@ rm -rf $VENV_PATH
 python -m venv "${VENV_PATH}"
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 source "${VENV_PATH}/bin/activate"
-pip install bs4 pytest pytest-xdist pytest-rerunfailures
+pip install bs4 pytest pytest-xdist "pytest-rerunfailures<=16.0.1"
 
 if [ "$PYTEST_HTML_SPEC" = "default" ]; then
   pip install "pytest-html>=4.0.2"
