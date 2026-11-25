@@ -597,11 +597,23 @@ class PytestHTMLReportMerger:
         )
         return
 
-    def process_report(self, report_path):
+    def add_report(
+        self,
+        report_path: str,
+    ) -> None:
+        assert type(report_path) is str
+
         self._report_count += 1
 
         with open(report_path, "r", encoding="utf-8") as f:
-            soup = bs4.BeautifulSoup(f, features="html.parser")
+            html_content = f.read()
+
+        assert type(html_content) is str
+
+        soup = bs4.BeautifulSoup(
+            html_content,
+            features="html.parser",
+        )
 
         assert isinstance(soup, bs4.BeautifulSoup)
 
@@ -656,8 +668,12 @@ class PytestHTMLReportMerger:
         self._summary_envs.add(prop_list)
         return
 
-    def write_report(self, report_path, report_title):
-        assert type(self.base) is not None
+    def write_report(
+        self,
+        report_path,
+        report_title,
+    ):
+        assert self.base is not None
         if report_title is None:
             report_title = os.path.basename(report_path)
 
@@ -708,6 +724,14 @@ class PytestHTMLReportMerger:
             base_element0 = base_elements[0]
             assert base_element0.string is not None, "key: {}".format(key)
             matches = re.search(r"(\d+)", base_element0.string)
+            if matches is None:
+                raise RuntimeError(
+                    "Cannot extract numeric value for filter {0!r} from {1!r}.".format(
+                        key,
+                        base_element0.string,
+                    )
+                )
+            assert matches is not None
             base_value = int(matches.groups()[0])
 
             # save the updated count to the base
@@ -721,6 +745,8 @@ class PytestHTMLReportMerger:
             if base_value == 0 and value > 0:
                 ele = self.base.select(f"[data-test-result='{key}']")[0]
                 del ele["disabled"]
+
+            continue
 
         # load json data from the base report
         base_data_container = self.base.select("#data-container")[0]
@@ -790,6 +816,7 @@ def main(arguments):
             pattern = os.path.join(abs_dir, "*.html")
             found = glob.glob(pattern)
             raw_files.extend(found)
+            continue
 
     # 2. Collect from positional files
     if arguments.html_files:
@@ -802,6 +829,7 @@ def main(arguments):
                 has_errors = True
                 continue
             raw_files.append(abs_file)
+            continue
 
     # --- THE DEDUPLICATION CHECK ---
     counts = collections.Counter(raw_files)
@@ -810,6 +838,7 @@ def main(arguments):
     if duplicates:
         for d in duplicates:
             log.error(f"Duplicate input file detected: '{d}'")
+            continue
         has_errors = True
 
     # 3. Final check
@@ -831,10 +860,15 @@ def main(arguments):
 
     for infile in raw_files:
         log.info(f"Processing report: {infile}")
-        report_merger.process_report(infile)
+        report_merger.add_report(infile)
+        continue
 
     # Finalize and write the aggregated report to disk
-    report_merger.write_report(arguments.out, arguments.title)
+    report_merger.write_report(
+        arguments.out,
+        arguments.title,
+    )
+
     log.info(
         f"Successfully merged {len(raw_files)} reports into {arguments.out}",
     )
