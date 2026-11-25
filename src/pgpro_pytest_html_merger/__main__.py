@@ -715,6 +715,14 @@ class PytestHTMLReportMerger:
             base_element0 = base_elements[0]
             assert base_element0.string is not None, "key: {}".format(key)
             matches = re.search(r"(\d+)", base_element0.string)
+            if matches is None:
+                raise RuntimeError(
+                    "Cannot extract numeric value for filter {0!r} from {1!r}.".format(
+                        key,
+                        base_element0.string,
+                    )
+                )
+            assert matches is not None
             base_value = int(matches.groups()[0])
 
             # save the updated count to the base
