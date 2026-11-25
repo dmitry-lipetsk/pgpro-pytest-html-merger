@@ -653,7 +653,7 @@ class PytestHTMLReportMerger:
                     str(report_path),
                 )
             )
-        assert type(report_jsonblob) is not str
+        assert type(report_jsonblob) is str
 
         report_data = json.loads(report_jsonblob)
 
@@ -769,6 +769,7 @@ class PytestHTMLReportMerger:
         # load json data from the base report
         base_data_container = self.base.select("#data-container")[0]
         base_jsonblob = base_data_container.get("data-jsonblob")
+        assert type(base_jsonblob) is str
         base_data = json.loads(base_jsonblob)
 
         # reset the title in the footer's data-jsonblob
