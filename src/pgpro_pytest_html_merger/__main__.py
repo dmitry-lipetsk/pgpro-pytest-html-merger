@@ -646,6 +646,15 @@ class PytestHTMLReportMerger:
         # load json data from the current report
         report_data_container = soup.select("#data-container")[0]
         report_jsonblob = report_data_container.get("data-jsonblob")
+
+        if type(report_jsonblob) is not str:
+            raise RuntimeError(
+                "Report {0!r} does not contain a valid 'data-jsonblob' string attribute.".format(
+                    str(report_path),
+                )
+            )
+        assert type(report_jsonblob) is not str
+
         report_data = json.loads(report_jsonblob)
 
         # Calculate summary
