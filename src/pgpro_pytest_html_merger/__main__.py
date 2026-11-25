@@ -664,7 +664,7 @@ class PytestHTMLReportMerger:
         return
 
     def write_report(self, report_path, report_title):
-        assert type(self.base) is not None
+        assert self.base is not None
         if report_title is None:
             report_title = os.path.basename(report_path)
 
